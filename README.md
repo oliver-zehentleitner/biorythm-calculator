@@ -6,7 +6,7 @@
 # Biorythm Calculator for My Grandfather
 
 My grandfather has been researching biorhythms for over 60 years and has been using the 
-[Santron Biolator](https://www.metatechnisches-kabinett.de/rechner/santron/santron-biolator/) (also known as the Casio 
+[Santron Biolator](https://www.metatechnisches-kabinett.de/rechner/santron/santron-biolator) (also known as the Casio 
 Biolator) for decades.
 
 Since calculations beyond December 31, 1999, can only be performed with a workaround and my grandfather has been 
@@ -20,5 +20,7 @@ days as whole numbers instead of percentages.
 
 ## Why HTML and JavaScript?
 
-By using only HTML and JavaScript, the calculator is implemented as a "WebApp" that can be hosted on GitHub. This 
+By using only HTML and JavaScript, the calculator is implemented as a 
+"[WebApp](https://oliver-zehentleitner.github.io/biorythm-calculator)" that can be hosted on 
+[GitHub](https://github.com/oliver-zehentleitner/biorythm-calculator). This 
 ensures it is accessible on all devices without requiring installation or updates.
