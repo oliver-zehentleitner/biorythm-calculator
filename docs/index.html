@@ -9,6 +9,9 @@
         input { margin: 10px; padding: 5px; }
         button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
         .result { margin-top: 20px; font-size: 1.2em; }
+        .physical { color: green; }
+        .emotional { color: blue; }
+        .intellectual { color: red; }
     </style>
 </head>
 <body>
@@ -17,6 +20,12 @@
     <input type="date" id="birthdate" required><br>
     <label for="eventdate">Ereignisdatum:</label>
     <input type="date" id="eventdate" required><br>
+    <label for="physicalCycle" class="physical">Körperlicher Rhythmus (Tage, Standard 23):</label>
+    <input type="number" id="physicalCycle" value="23"><br>
+    <label for="emotionalCycle" class="emotional">Emotionaler Rhythmus (Tage, Standard 28):</label>
+    <input type="number" id="emotionalCycle" value="28"><br>
+    <label for="intellectualCycle" class="intellectual">Geistiger Rhythmus (Tage, Standard 33):</label>
+    <input type="number" id="intellectualCycle" value="33"><br>
     <button onclick="calculateBiorythms()">OK</button>
 
     <div class="result" id="result"></div>
@@ -32,14 +41,19 @@
 
             const diffDays = Math.floor((eventdate - birthdate) / (1000 * 60 * 60 * 24));
 
-            const physical = diffDays % 23;
-            const emotional = diffDays % 28;
-            const intellectual = diffDays % 33;
+            const physicalCycle = parseInt(document.getElementById('physicalCycle').value) || 23;
+            const emotionalCycle = parseInt(document.getElementById('emotionalCycle').value) || 28;
+            const intellectualCycle = parseInt(document.getElementById('intellectualCycle').value) || 33;
+
+            const physical = diffDays % physicalCycle;
+            const emotional = diffDays % emotionalCycle;
+            const intellectual = diffDays % intellectualCycle;
 
             document.getElementById('result').innerHTML = `
-                <p><strong>Körperlicher Rhythmus:</strong> Tag ${physical} von 23</p>
-                <p><strong>Emotionaler Rhythmus:</strong> Tag ${emotional} von 28</p>
-                <p><strong>Geistiger Rhythmus:</strong> Tag ${intellectual} von 33</p>
+                <h2>Ergebnis</h2>
+                <p class="physical"><strong>Körperlicher Rhythmus:</strong><br>Tag ${physical} von ${physicalCycle}</p>
+                <p class="emotional"><strong>Emotionaler Rhythmus:</strong><br>Tag ${emotional} von ${emotionalCycle}</p>
+                <p class="intellectual"><strong>Geistiger Rhythmus:</strong><br>Tag ${intellectual} von ${intellectualCycle}</p>
                 <p>Insgesamt sind ${diffDays} Tage vergangen.</p>
             `;
         }
