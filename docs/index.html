@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biorythmus Rechner</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input { margin: 10px; padding: 5px; }
+        button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .result { margin-top: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>Biorythmus Rechner</h1>
+    <label for="birthdate">Geburtsdatum:</label>
+    <input type="date" id="birthdate" required><br>
+    <label for="eventdate">Ereignisdatum:</label>
+    <input type="date" id="eventdate" required><br>
+    <button onclick="calculateBiorythms()">OK</button>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        function calculateBiorythms() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const eventdate = new Date(document.getElementById('eventdate').value);
+            if (isNaN(birthdate) || isNaN(eventdate)) {
+                alert('Bitte gültige Daten eingeben!');
+                return;
+            }
+
+            const diffDays = Math.floor((eventdate - birthdate) / (1000 * 60 * 60 * 24));
+
+            const physical = diffDays % 23;
+            const emotional = diffDays % 28;
+            const intellectual = diffDays % 33;
+
+            document.getElementById('result').innerHTML = `
+                <p><strong>Körperlicher Rhythmus:</strong> Tag ${physical} von 23</p>
+                <p><strong>Emotionaler Rhythmus:</strong> Tag ${emotional} von 28</p>
+                <p><strong>Geistiger Rhythmus:</strong> Tag ${intellectual} von 33</p>
+                <p>Insgesamt sind ${diffDays} Tage vergangen.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
