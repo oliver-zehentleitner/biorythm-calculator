@@ -13,6 +13,8 @@
         .emotional { color: blue; }
         .intellectual { color: red; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
 </head>
 <body>
     <h1>Biorythmus Rechner</h1>
@@ -29,8 +31,10 @@
     <button onclick="calculateBiorythms()">OK</button>
 
     <div class="result" id="result"></div>
+    <canvas id="biorythmChart" width="400" height="200"></canvas>
 
     <script>
+        let myChart;
         function calculateBiorythms() {
             const birthdate = new Date(document.getElementById('birthdate').value);
             const eventdate = new Date(document.getElementById('eventdate').value);
@@ -56,6 +60,78 @@
                 <p class="intellectual"><strong>Geistiger Rhythmus:</strong><br>Tag ${intellectual} von ${intellectualCycle}</p>
                 <p>Insgesamt sind ${diffDays} Tage vergangen.</p>
             `;
+
+            const ctx = document.getElementById('biorythmChart').getContext('2d');
+            const days = [...Array(30).keys()];
+            const physicalData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / physicalCycle));
+            const emotionalData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / emotionalCycle));
+            const intellectualData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / intellectualCycle));
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days.map(d => d - 15),
+                    datasets: [
+                        {
+                            label: 'Körperlich',
+                            data: physicalData,
+                            borderColor: 'green',
+                            fill: false
+                        },
+                        {
+                            label: 'Emotional',
+                            data: emotionalData,
+                            borderColor: 'blue',
+                            fill: false
+                        },
+                        {
+                            label: 'Geistig',
+                            data: intellectualData,
+                            borderColor: 'red',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    xMin: 15,
+                                    xMax: 15,
+                                    borderColor: 'black',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'Ereignisdatum',
+                                        enabled: true,
+                                        position: 'start'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: -1,
+                            max: 1
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tage relativ zum Ereignisdatum',
+                                font: {
+                                    weight: '900'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
