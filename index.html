@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,30 +13,211 @@
         .emotional { color: blue; }
         .intellectual { color: red; }
     </style>
-    <link rel="stylesheet" href="./gh-fork-ribbon.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
+    <link rel="stylesheet" href="https://oliver-zehentleitner.github.io/biorythm-calculator/gh-fork-ribbon.min.css" />
+    <script src="https://oliver-zehentleitner.github.io/biorythm-calculator/chart.js"></script>
+    <script src="https://oliver-zehentleitner.github.io/biorythm-calculator/chartjs-plugin-annotation@1.0.0"></script>
 </head>
 <body>
     <a class="github-fork-ribbon" href="https://github.com/oliver-zehentleitner/biorythm-calculator"
        data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
-    <h1 style="padding-top:40px">Biorythmus Rechner</h1>
-    <label for="birthdate">Geburtsdatum:</label>
+    <h1 style="padding-top:40px">Biorhythm Calculator</h1>
+    <label for="birthdate">Birthdate:</label>
     <input type="date" id="birthdate" required><br>
-    <label for="eventdate">Ereignisdatum:</label>
+    <label for="eventdate">Event Date:</label>
     <input type="date" id="eventdate" required><br>
-    <label for="physicalCycle" class="physical">Körperlicher Rhythmus (Tage, Standard 23):</label>
+    <label for="physicalCycle" class="physical">Physical Cycle (Days, Default 23):</label>
     <input type="number" id="physicalCycle" value="23"><br>
-    <label for="emotionalCycle" class="emotional">Emotionaler Rhythmus (Tage, Standard 28):</label>
+    <label for="emotionalCycle" class="emotional">Emotional Cycle (Days, Default 28):</label>
     <input type="number" id="emotionalCycle" value="28"><br>
-    <label for="intellectualCycle" class="intellectual">Geistiger Rhythmus (Tage, Standard 33):</label>
+    <label for="intellectualCycle" class="intellectual">Intellectual Cycle (Days, Default 33):</label>
     <input type="number" id="intellectualCycle" value="33"><br>
-    <button onclick="calculateBiorythms()">OK</button>
-
+    <button onclick="calculateBiorythms()">Calculate</button>
     <div class="result" id="result"></div>
     <canvas id="biorythmChart" width="400" height="200"></canvas>
-
     <script>
+        const translations = {
+            de: {
+                title: "Biorythmus Rechner",
+                birthdate: "Geburtsdatum:",
+                eventdate: "Ereignisdatum:",
+                physicalCycle: "Körperlicher Rhythmus (Tage, Standard 23):",
+                emotionalCycle: "Emotionaler Rhythmus (Tage, Standard 28):",
+                intellectualCycle: "Geistiger Rhythmus (Tage, Standard 33):",
+                button: "OK",
+                resultTitle: "Ergebnis",
+                physical: "Körperlicher Rhythmus",
+                emotional: "Emotionaler Rhythmus",
+                intellectual: "Geistiger Rhythmus",
+                daysPassed: "Insgesamt sind {days} Tage vergangen.",
+                dayOfCycle: "Tag {day} von {cycle}",
+                chartLabels: {
+                    physical: "Körperlich",
+                    emotional: "Emotional",
+                    intellectual: "Geistig",
+                    xAxis: "Tage relativ zum Ereignisdatum"
+                }
+            },
+            en: {
+                title: "Biorhythm Calculator",
+                birthdate: "Birthdate:",
+                eventdate: "Event Date:",
+                physicalCycle: "Physical Cycle (Days, Default 23):",
+                emotionalCycle: "Emotional Cycle (Days, Default 28):",
+                intellectualCycle: "Intellectual Cycle (Days, Default 33):",
+                button: "Calculate",
+                resultTitle: "Result",
+                physical: "Physical Rhythm",
+                emotional: "Emotional Rhythm",
+                intellectual: "Intellectual Rhythm",
+                daysPassed: "A total of {days} days have passed.",
+                dayOfCycle: "Day {day} of {cycle}",
+                chartLabels: {
+                    physical: "Physical",
+                    emotional: "Emotional",
+                    intellectual: "Intellectual",
+                    xAxis: "Days relative to event date"
+                }
+            },
+            fr: {
+                title: "Calculateur de Biorhythme",
+                birthdate: "Date de naissance:",
+                eventdate: "Date de l'événement:",
+                physicalCycle: "Cycle Physique (Jours, Par défaut 23):",
+                emotionalCycle: "Cycle Émotionnel (Jours, Par défaut 28):",
+                intellectualCycle: "Cycle Intellectuel (Jours, Par défaut 33):",
+                button: "Calculer",
+                resultTitle: "Résultat",
+                physical: "Rythme Physique",
+                emotional: "Rythme Émotionnel",
+                intellectual: "Rythme Intellectuel",
+                daysPassed: "Un total de {days} jours se sont écoulés.",
+                dayOfCycle: "Jour {day} sur {cycle}",
+                chartLabels: {
+                    physical: "Physique",
+                    emotional: "Émotionnel",
+                    intellectual: "Intellectuel",
+                    xAxis: "Jours relatifs à la date de l'événement"
+                }
+            },
+            es: {
+                title: "Calculadora de Biorritmo",
+                birthdate: "Fecha de nacimiento:",
+                eventdate: "Fecha del evento:",
+                physicalCycle: "Ciclo Físico (Días, Predeterminado 23):",
+                emotionalCycle: "Ciclo Emocional (Días, Predeterminado 28):",
+                intellectualCycle: "Ciclo Intelectual (Días, Predeterminado 33):",
+                button: "Calcular",
+                resultTitle: "Resultado",
+                physical: "Ritmo Físico",
+                emotional: "Ritmo Emocional",
+                intellectual: "Ritmo Intelectual",
+                daysPassed: "Han pasado un total de {days} días.",
+                dayOfCycle: "Día {day} de {cycle}",
+                chartLabels: {
+                    physical: "Físico",
+                    emotional: "Emocional",
+                    intellectual: "Intelectual",
+                    xAxis: "Días relativos a la fecha del evento"
+                }
+            },
+            ru: {
+                title: "Калькулятор Биоритмов",
+                birthdate: "Дата рождения:",
+                eventdate: "Дата события:",
+                physicalCycle: "Физический цикл (Дни, По умолчанию 23):",
+                emotionalCycle: "Эмоциональный цикл (Дни, По умолчанию 28):",
+                intellectualCycle: "Интеллектуальный цикл (Дни, По умолчанию 33):",
+                button: "Рассчитать",
+                resultTitle: "Результат",
+                physical: "Физический Ритм",
+                emotional: "Эмоциональный Ритм",
+                intellectual: "Интеллектуальный Ритм",
+                daysPassed: "Прошло всего {days} дней.",
+                dayOfCycle: "День {day} из {cycle}",
+                chartLabels: {
+                    physical: "Физический",
+                    emotional: "Эмоциональный",
+                    intellectual: "Интеллектуальный",
+                    xAxis: "Дни относительно даты события"
+                }
+            },
+            zh: {
+                title: "生物节律计算器",
+                birthdate: "出生日期:",
+                eventdate: "事件日期:",
+                physicalCycle: "身体周期 (天, 默认 23):",
+                emotionalCycle: "情绪周期 (天, 默认 28):",
+                intellectualCycle: "智力周期 (天, 默认 33):",
+                button: "计算",
+                resultTitle: "结果",
+                physical: "身体节律",
+                emotional: "情绪节律",
+                intellectual: "智力节律",
+                daysPassed: "总共过去了 {days} 天。",
+                dayOfCycle: "第 {day} 天，共 {cycle} 天",
+                chartLabels: {
+                    physical: "身体",
+                    emotional: "情绪",
+                    intellectual: "智力",
+                    xAxis: "相对于事件日期的天数"
+                }
+            },
+            ja: {
+                title: "バイオリズム計算機",
+                birthdate: "生年月日:",
+                eventdate: "イベント日:",
+                physicalCycle: "身体リズム (日数, デフォルト 23):",
+                emotionalCycle: "感情リズム (日数, デフォルト 28):",
+                intellectualCycle: "知的リズム (日数, デフォルト 33):",
+                button: "計算する",
+                resultTitle: "結果",
+                physical: "身体リズム",
+                emotional: "感情リズム",
+                intellectual: "知的リズム",
+                daysPassed: "合計 {days} 日が経過しました。",
+                dayOfCycle: "{cycle} 日中の {day} 日目",
+                chartLabels: {
+                    physical: "身体",
+                    emotional: "感情",
+                    intellectual: "知的",
+                    xAxis: "イベント日相対の日数"
+                }
+            },
+            hi: {
+                title: "बायोरिदम कैलकुलेटर",
+                birthdate: "जन्मतिथि:",
+                eventdate: "घटना की तिथि:",
+                physicalCycle: "शारीरिक चक्र (दिन, डिफ़ॉल्ट 23):",
+                emotionalCycle: "भावनात्मक चक्र (दिन, डिफ़ॉल्ट 28):",
+                intellectualCycle: "बौद्धिक चक्र (दिन, डिफ़ॉल्ट 33):",
+                button: "गणना करें",
+                resultTitle: "परिणाम",
+                physical: "शारीरिक लय",
+                emotional: "भावनात्मक लय",
+                intellectual: "बौद्धिक लय",
+                daysPassed: "कुल {days} दिन बीत चुके हैं।",
+                dayOfCycle: "{cycle} में से दिन {day}",
+                chartLabels: {
+                    physical: "शारीरिक",
+                    emotional: "भावनात्मक",
+                    intellectual: "बौद्धिक",
+                    xAxis: "घटना की तिथि के सापेक्ष दिन"
+                }
+            }
+        };
+
+        const userLang = navigator.language.slice(0, 2);
+        const lang = translations[userLang] ? userLang : 'en';
+
+        document.title = translations[lang].title;
+        document.querySelector('h1').textContent = translations[lang].title;
+        document.querySelector('label[for="birthdate"]').textContent = translations[lang].birthdate;
+        document.querySelector('label[for="eventdate"]').textContent = translations[lang].eventdate;
+        document.querySelector('label[for="physicalCycle"]').textContent = translations[lang].physicalCycle;
+        document.querySelector('label[for="emotionalCycle"]').textContent = translations[lang].emotionalCycle;
+        document.querySelector('label[for="intellectualCycle"]').textContent = translations[lang].intellectualCycle;
+        document.querySelector('button').textContent = translations[lang].button;
+
         let myChart;
         function calculateBiorythms() {
             const birthdate = new Date(document.getElementById('birthdate').value);
@@ -57,11 +238,11 @@
             const intellectual = diffDays % intellectualCycle;
 
             document.getElementById('result').innerHTML = `
-                <h2>Ergebnis</h2>
-                <p class="physical"><strong>Körperlicher Rhythmus:</strong><br>Tag ${physical} von ${physicalCycle}</p>
-                <p class="emotional"><strong>Emotionaler Rhythmus:</strong><br>Tag ${emotional} von ${emotionalCycle}</p>
-                <p class="intellectual"><strong>Geistiger Rhythmus:</strong><br>Tag ${intellectual} von ${intellectualCycle}</p>
-                <p>Insgesamt sind ${diffDays} Tage vergangen.</p>
+                <h2>${translations[lang].resultTitle}</h2>
+                <p class="physical"><strong>${translations[lang].physical}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', physical).replace('{cycle}', physicalCycle)}</p>
+                <p class="emotional"><strong>${translations[lang].emotional}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', emotional).replace('{cycle}', emotionalCycle)}</p>
+                <p class="intellectual"><strong>${translations[lang].intellectual}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', intellectual).replace('{cycle}', intellectualCycle)}</p>
+                <p>${translations[lang].daysPassed.replace('{days}', diffDays)}</p>
             `;
 
             const ctx = document.getElementById('biorythmChart').getContext('2d');
@@ -80,19 +261,19 @@
                     labels: days.map(d => d - 15),
                     datasets: [
                         {
-                            label: 'Körperlich',
+                            label: translations[lang].chartLabels.physical,
                             data: physicalData,
                             borderColor: 'green',
                             fill: false
                         },
                         {
-                            label: 'Emotional',
+                            label: translations[lang].chartLabels.emotional,
                             data: emotionalData,
                             borderColor: 'blue',
                             fill: false
                         },
                         {
-                            label: 'Geistig',
+                            label: translations[lang].chartLabels.intellectual,
                             data: intellectualData,
                             borderColor: 'red',
                             fill: false
@@ -110,7 +291,7 @@
                                     borderColor: 'black',
                                     borderWidth: 2,
                                     label: {
-                                        content: 'Ereignisdatum',
+                                        content: translations[lang].eventdate,
                                         enabled: true,
                                         position: 'start'
                                     }
@@ -126,7 +307,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Tage relativ zum Ereignisdatum',
+                                text: translations[lang].chartLabels.xAxis,
                                 font: {
                                     weight: '900'
                                 }
