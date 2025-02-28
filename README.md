@@ -1,6 +1,8 @@
 # biorythm-calculator
 [Calculator to calculate biorythms and remaining days](https://oliver-zehentleitner.github.io/biorythm-calculator)
 
+Supported languages: DE, EN, ES, FR, HI, IT, JA, NL, RU, ZH
+
 > ***This project is dedicated to my grandfather and his lifelong passion for biorhythm research.***
 
 ## Biorythm Calculator for My Grandfather
