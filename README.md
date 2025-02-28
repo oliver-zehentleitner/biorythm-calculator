@@ -1,6 +1,8 @@
 # biorythm-calculator
 [Calculator to calculate biorythms and remaining days](https://oliver-zehentleitner.github.io/biorythm-calculator)
 
+> ***This project is dedicated to my grandfather and his lifelong passion for biorhythm research.***
+
 # Biorythm Calculator for My Grandfather
 
 My grandfather has been researching biorhythms for over 60 years and has been using the 
@@ -15,9 +17,8 @@ developed this calculator as a modern replacement.
 
 The goal is to provide a reliable substitute for the Biolator that can calculate biorhythms and display the remaining 
 days as whole numbers instead of percentages.
-Why HTML and JavaScript?
+
+## Why HTML and JavaScript?
 
 By using only HTML and JavaScript, the calculator is implemented as a "WebApp" that can be hosted on GitHub. This 
 ensures it is accessible on all devices without requiring installation or updates.
-
-This project is dedicated to my grandfather and his lifelong passion for biorhythm research.
