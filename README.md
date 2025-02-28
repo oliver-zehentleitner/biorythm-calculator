@@ -3,8 +3,9 @@ Calculator to calculate biorythms and remaining days
 
 # Biorythm Calculator for My Grandfather
 
-My grandfather has been researching biorhythms for over 60 years and has been using the Santron Biolator (also known as 
-the Casio Biolator) for decades.
+My grandfather has been researching biorhythms for over 60 years and has been using the 
+[Santron Biolator](https://www.metatechnisches-kabinett.de/rechner/santron/santron-biolator/) (also known as the Casio 
+Biolator) for decades.
 
 Since calculations beyond December 31, 1999, can only be performed with a workaround and my grandfather has been 
 experiencing a high rate of wear and tear on these devices—which have become increasingly difficult to find—I developed 
