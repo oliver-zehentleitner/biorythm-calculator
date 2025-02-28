@@ -55,7 +55,8 @@
                     emotional: "Emotional",
                     intellectual: "Geistig",
                     xAxis: "Tage relativ zum Ereignisdatum"
-                }
+                },
+                invalidDate: "Bitte gültige Daten eingeben!"
             },
             en: {
                 title: "Biorhythm Calculator",
@@ -76,7 +77,8 @@
                     emotional: "Emotional",
                     intellectual: "Intellectual",
                     xAxis: "Days relative to event date"
-                }
+                },
+                invalidDate: "Please enter valid dates!"
             },
             fr: {
                 title: "Calculateur de Biorhythme",
@@ -97,7 +99,8 @@
                     emotional: "Émotionnel",
                     intellectual: "Intellectuel",
                     xAxis: "Jours relatifs à la date de l'événement"
-                }
+                },
+                invalidDate: "Veuillez entrer des dates valides!"
             },
             es: {
                 title: "Calculadora de Biorritmo",
@@ -118,7 +121,8 @@
                     emotional: "Emocional",
                     intellectual: "Intelectual",
                     xAxis: "Días relativos a la fecha del evento"
-                }
+                },
+                invalidDate: "Introduzca fechas válidas!"
             },
             ru: {
                 title: "Калькулятор Биоритмов",
@@ -139,7 +143,8 @@
                     emotional: "Эмоциональный",
                     intellectual: "Интеллектуальный",
                     xAxis: "Дни относительно даты события"
-                }
+                },
+                invalidDate: "Пожалуйста, введите действительные даты!"
             },
             zh: {
                 title: "生物节律计算器",
@@ -160,7 +165,8 @@
                     emotional: "情绪",
                     intellectual: "智力",
                     xAxis: "相对于事件日期的天数"
-                }
+                },
+                invalidDate: "请输入有效的日期！"
             },
             ja: {
                 title: "バイオリズム計算機",
@@ -181,7 +187,8 @@
                     emotional: "感情",
                     intellectual: "知的",
                     xAxis: "イベント日相対の日数"
-                }
+                },
+                invalidDate: "有効な日付を入力してください！"
             },
             hi: {
                 title: "बायोरिदम कैलकुलेटर",
@@ -202,7 +209,8 @@
                     emotional: "भावनात्मक",
                     intellectual: "बौद्धिक",
                     xAxis: "घटना की तिथि के सापेक्ष दिन"
-                }
+                },
+                invalidDate: "कृपया मान्य तिथियाँ दर्ज करें!"
             },
             it: {
                 title: "Calcolatore di Bioritmo",
@@ -223,7 +231,8 @@
                     emotional: "Emozionale",
                     intellectual: "Intellettuale",
                     xAxis: "Giorni relativi alla data dell'evento"
-                }
+                },
+                invalidDate: "Inserisci date valide!"
             }
         };
 
@@ -244,7 +253,7 @@
             const birthdate = new Date(document.getElementById('birthdate').value);
             const eventdate = new Date(document.getElementById('eventdate').value);
             if (isNaN(birthdate) || isNaN(eventdate)) {
-                alert('Bitte gültige Daten eingeben!');
+                alert(translations[lang].invalidDate);
                 return;
             }
 
@@ -267,7 +276,7 @@
             `;
 
             const ctx = document.getElementById('biorythmChart').getContext('2d');
-            const days = [...Array(30).keys()];
+            const days = [...Array(31).keys()];
             const physicalData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / physicalCycle));
             const emotionalData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / emotionalCycle));
             const intellectualData = days.map(day => Math.sin(2 * Math.PI * (diffDays + day - 15) / intellectualCycle));
