@@ -1,7 +1,17 @@
 # biorythm-calculator
 [Calculator to calculate biorythms and remaining days](https://oliver-zehentleitner.github.io/biorythm-calculator)
 
-Supported languages: DE, EN, ES, FR, HI, IT, JA, NL, RU, ZH
+Supported languages: 
+[DE](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=de), 
+[EN](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=en), 
+[ES](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=es), 
+[FR](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=fr), 
+[HI](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=hi), 
+[IT](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=it), 
+[JA](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=ja), 
+[NL](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=nl), 
+[RU](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=ru), 
+[ZH](https://oliver-zehentleitner.github.io/biorythm-calculator/index.html?lang=zh)
 
 > ***This project is dedicated to my grandfather and his lifelong passion for biorhythm research.***
 
