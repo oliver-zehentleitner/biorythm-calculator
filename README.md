@@ -33,7 +33,7 @@ By using only HTML and JavaScript, the calculator is implemented as a
 "[WebApp](https://oliver-zehentleitner.github.io/biorythm-calculator)" that can be hosted on 
 [GitHub](https://github.com/oliver-zehentleitner/biorythm-calculator). This 
 ensures it is accessible on all devices without requiring installation or updates. At the same time, it is very easy to 
-make the project available as an Android or IOS app with WebView.
+make the project available as an Android or IOS app.
 
 ## Contributing
 If you want to report a bug, add an extension or add a new language, please open a new 
