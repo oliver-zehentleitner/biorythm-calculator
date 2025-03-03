@@ -1,0 +1,19 @@
+{
+  "name": "biorythm-calculator",
+  "version": "1.0.0",
+  "description": "[Calculator to calculate biorythms and remaining days](https://oliver-zehentleitner.github.io/biorythm-calculator)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/ios": "^7.0.1"
+  }
+}
