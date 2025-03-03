@@ -12,6 +12,9 @@
         .physical { color: green; }
         .emotional { color: blue; }
         .intellectual { color: red; }
+        #biorythmChart {
+            display: none;
+        }
     </style>
     <link rel="shortcut icon" type="image/x-icon" href="https://oliver-zehentleitner.github.io/biorythm-calculator/favicon.ico">
     <link rel="stylesheet" href="https://oliver-zehentleitner.github.io/biorythm-calculator/gh-fork-ribbon.min.css" />
@@ -35,6 +38,7 @@
     <button onclick="calculateBiorythms()">Calculate</button>
     <div class="result" id="result"></div>
     <canvas id="biorythmChart" width="400" height="200"></canvas>
+    <br id="break">
     <script>
         /* Text and languages */
         const translations = {
@@ -387,7 +391,10 @@
                     }
                 }
             });
+            document.getElementById('biorythmChart').style.display = 'block';
+            document.getElementById('break').style.display = 'none';
         }
+
     </script>
 <p>Languages:
     <a href="?lang=de">DE</a>,
