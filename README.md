@@ -25,8 +25,8 @@ experiencing a high rate of wear and tear on these devices - which have become i
 developed this calculator as a modern replacement.
 
 ## Purpose
-The goal is to provide a reliable substitute for the Biolator that can calculate biorhythms and display the remaining 
-days as whole numbers instead of percentages.
+The goal is to provide a reliable substitute for the [Biolator](https://www.metatechnisches-kabinett.de/rechner/santron/santron-biolator) 
+that can calculate biorhythms and display the remaining days as whole numbers instead of percentages.
 
 ## Why HTML and JavaScript?
 By using only HTML and JavaScript, the calculator is implemented as a 
