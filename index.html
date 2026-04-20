@@ -1,19 +1,214 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biorhythm Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        input { margin: 10px; padding: 5px; }
-        button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
-        .result { margin-top: 20px; font-size: 1.2em; }
-        .physical { color: green; }
-        .emotional { color: blue; }
-        .intellectual { color: red; }
-        #biorythmChart {
-            display: none;
+        :root {
+            --color-bg: #f4f1ea;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: #555;
+            --color-border: #c9c4b7;
+            --color-border-focus: #1a1a1a;
+            --color-physical: #1f7a32;
+            --color-emotional: #1455a0;
+            --color-intellectual: #b0201f;
+            --color-button: #1a1a1a;
+            --color-button-text: #ffffff;
+            --radius: 14px;
+            --shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 20px;
+            line-height: 1.5;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        h1 {
+            font-size: 2.4em;
+            margin: 0 0 28px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .form-row:last-of-type { margin-bottom: 0; }
+
+        label {
+            flex: 0 0 280px;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            flex: 1 1 240px;
+            min-width: 0;
+            font-size: 1.25em;
+            padding: 16px 18px;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--color-text);
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-border-focus);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+        }
+
+        .cycles-section {
+            margin-top: 8px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--color-border);
+        }
+        .cycles-section .form-row input[type="number"] {
+            flex: 0 0 140px;
+            max-width: 140px;
+        }
+        .cycles-section .physical-label { color: var(--color-physical); }
+        .cycles-section .emotional-label { color: var(--color-emotional); }
+        .cycles-section .intellectual-label { color: var(--color-intellectual); }
+
+        button.primary {
+            display: block;
+            width: 100%;
+            padding: 22px;
+            font-size: 1.35em;
+            font-weight: 700;
+            background: var(--color-button);
+            color: var(--color-button-text);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 28px;
+            letter-spacing: 0.01em;
+        }
+        button.primary:hover { background: #000; }
+        button.primary:active { transform: scale(0.99); }
+
+        .result-title {
+            font-size: 1.7em;
+            margin: 0 0 24px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .rhythms {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .rhythm {
+            border: 2px solid currentColor;
+            border-radius: var(--radius);
+            padding: 22px 16px;
+            text-align: center;
+            background: #fff;
+        }
+        .rhythm.physical { color: var(--color-physical); }
+        .rhythm.emotional { color: var(--color-emotional); }
+        .rhythm.intellectual { color: var(--color-intellectual); }
+
+        .rhythm .rhythm-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .rhythm .value {
+            font-size: 2.6em;
+            font-weight: 800;
+            line-height: 1;
+            margin: 10px 0 6px;
+        }
+        .rhythm .trend {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--color-text-muted);
+        }
+        .rhythm .day-of-cycle {
+            font-size: 0.95em;
+            color: var(--color-text-muted);
+        }
+
+        .days-passed {
+            text-align: center;
+            font-size: 1.05em;
+            color: var(--color-text-muted);
+            margin: 0 0 24px;
+        }
+
+        .chart-wrap {
+            width: 100%;
+            height: 360px;
+            position: relative;
+        }
+
+        .languages {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--color-text-muted);
+            font-size: 0.95em;
+        }
+        .languages a {
+            color: var(--color-text-muted);
+            margin: 0 6px;
+            text-decoration: none;
+            border-bottom: 1px dotted currentColor;
+        }
+        .languages a:hover { color: var(--color-text); }
+
+        .hidden { display: none; }
+
+        @media (max-width: 760px) {
+            html, body { font-size: 18px; }
+            .page { padding: 24px 16px 40px; }
+            .card { padding: 22px; }
+            h1 { font-size: 2em; }
+            label { flex-basis: 100%; }
+            .cycles-section .form-row input[type="number"] { flex: 1 1 100%; max-width: none; }
+            .rhythms { grid-template-columns: 1fr; }
+            .chart-wrap { height: 280px; }
         }
     </style>
     <link rel="shortcut icon" type="image/x-icon" href="https://oliver-zehentleitner.github.io/biorythm-calculator/favicon.ico">
@@ -24,36 +219,83 @@
 <body>
     <a class="github-fork-ribbon" href="https://github.com/oliver-zehentleitner/biorythm-calculator"
        data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
-    <h1 style="padding-top:50px">Biorhythm Calculator</h1>
-    <label for="birthdate">Birthdate:</label>
-    <input type="date" id="birthdate" required><br>
-    <label for="eventdate">Event Date:</label>
-    <input type="date" id="eventdate" required><br>
-    <label for="physicalCycle" class="physical">Physical Cycle (Days, Default 23):</label>
-    <input type="number" id="physicalCycle" value="23" size="4"><br>
-    <label for="emotionalCycle" class="emotional">Emotional Cycle (Days, Default 28):</label>
-    <input type="number" id="emotionalCycle" value="28" size="4"><br>
-    <label for="intellectualCycle" class="intellectual">Intellectual Cycle (Days, Default 33):</label>
-    <input type="number" id="intellectualCycle" value="33" size="4"><br>
-    <button onclick="calculateBiorythms()">Calculate</button>
-    <div class="result" id="result"></div>
-    <canvas id="biorythmChart" width="400" height="200"></canvas>
-    <br id="break">
+
+    <div class="page">
+        <h1 id="pageTitle">Biorhythm Calculator</h1>
+
+        <div class="card">
+            <div class="form-row">
+                <label for="personName" id="nameLabel">Name:</label>
+                <input type="text" id="personName" autocomplete="name">
+            </div>
+            <div class="form-row">
+                <label for="birthdate" id="birthdateLabel">Birthdate:</label>
+                <input type="date" id="birthdate" required>
+            </div>
+            <div class="form-row">
+                <label for="eventdate" id="eventdateLabel">Event Date:</label>
+                <input type="date" id="eventdate" required>
+            </div>
+
+            <div class="cycles-section">
+                <div class="form-row">
+                    <label for="physicalCycle" class="physical-label" id="physicalCycleLabel">Physical Cycle (Default 23):</label>
+                    <input type="number" id="physicalCycle" value="23" min="1">
+                </div>
+                <div class="form-row">
+                    <label for="emotionalCycle" class="emotional-label" id="emotionalCycleLabel">Emotional Cycle (Default 28):</label>
+                    <input type="number" id="emotionalCycle" value="28" min="1">
+                </div>
+                <div class="form-row">
+                    <label for="intellectualCycle" class="intellectual-label" id="intellectualCycleLabel">Intellectual Cycle (Default 33):</label>
+                    <input type="number" id="intellectualCycle" value="33" min="1">
+                </div>
+            </div>
+
+            <button class="primary" id="calcButton" onclick="calculateBiorythms()">Calculate</button>
+        </div>
+
+        <div class="card hidden" id="resultCard">
+            <h2 class="result-title" id="resultTitle">Result</h2>
+            <div class="rhythms" id="rhythms"></div>
+            <p class="days-passed" id="daysPassed"></p>
+            <div class="chart-wrap">
+                <canvas id="biorythmChart"></canvas>
+            </div>
+        </div>
+
+        <p class="languages">Languages:
+            <a href="?lang=de">DE</a>
+            <a href="?lang=en">EN</a>
+            <a href="?lang=es">ES</a>
+            <a href="?lang=fr">FR</a>
+            <a href="?lang=hi">HI</a>
+            <a href="?lang=it">IT</a>
+            <a href="?lang=ja">JA</a>
+            <a href="?lang=nl">NL</a>
+            <a href="?lang=ru">RU</a>
+            <a href="?lang=zh">ZH</a>
+        </p>
+    </div>
+
     <script>
-        /* Text and languages */
         const translations = {
             de: {
-                title: "Biorythmus Rechner",
+                title: "Biorhythmus Rechner",
+                name: "Name:",
                 birthdate: "Geburtsdatum:",
                 eventdate: "Ereignisdatum:",
-                physicalCycle: "Körperlicher Rhythmus (Tage, Standard 23):",
-                emotionalCycle: "Emotionaler Rhythmus (Tage, Standard 28):",
-                intellectualCycle: "Geistiger Rhythmus (Tage, Standard 33):",
+                physicalCycle: "Körperlicher Rhythmus (Standard 23):",
+                emotionalCycle: "Emotionaler Rhythmus (Standard 28):",
+                intellectualCycle: "Geistiger Rhythmus (Standard 33):",
                 button: "Berechnen",
                 resultTitle: "Ergebnis",
-                physical: "Körperlicher Rhythmus",
-                emotional: "Emotionaler Rhythmus",
-                intellectual: "Geistiger Rhythmus",
+                resultFor: "Ergebnis für {name}",
+                physical: "Körperlich",
+                emotional: "Emotional",
+                intellectual: "Geistig",
+                rising: "↑ ansteigend",
+                falling: "↓ abfallend",
                 daysPassed: "Insgesamt sind {days} Tage vergangen.",
                 dayOfCycle: "Tag {day} von {cycle}",
                 chartLabels: {
@@ -67,16 +309,20 @@
             },
             en: {
                 title: "Biorhythm Calculator",
+                name: "Name:",
                 birthdate: "Birthdate:",
                 eventdate: "Event Date:",
-                physicalCycle: "Physical Cycle (Days, Default 23):",
-                emotionalCycle: "Emotional Cycle (Days, Default 28):",
-                intellectualCycle: "Intellectual Cycle (Days, Default 33):",
+                physicalCycle: "Physical Cycle (Default 23):",
+                emotionalCycle: "Emotional Cycle (Default 28):",
+                intellectualCycle: "Intellectual Cycle (Default 33):",
                 button: "Calculate",
                 resultTitle: "Result",
-                physical: "Physical Rhythm",
-                emotional: "Emotional Rhythm",
-                intellectual: "Intellectual Rhythm",
+                resultFor: "Result for {name}",
+                physical: "Physical",
+                emotional: "Emotional",
+                intellectual: "Intellectual",
+                rising: "↑ rising",
+                falling: "↓ falling",
                 daysPassed: "A total of {days} days have passed.",
                 dayOfCycle: "Day {day} of {cycle}",
                 chartLabels: {
@@ -90,16 +336,20 @@
             },
             fr: {
                 title: "Calculateur de Biorhythme",
+                name: "Nom:",
                 birthdate: "Date de naissance:",
                 eventdate: "Date de l'événement:",
-                physicalCycle: "Cycle Physique (Jours, Par défaut 23):",
-                emotionalCycle: "Cycle Émotionnel (Jours, Par défaut 28):",
-                intellectualCycle: "Cycle Intellectuel (Jours, Par défaut 33):",
+                physicalCycle: "Cycle Physique (Par défaut 23):",
+                emotionalCycle: "Cycle Émotionnel (Par défaut 28):",
+                intellectualCycle: "Cycle Intellectuel (Par défaut 33):",
                 button: "Calculer",
                 resultTitle: "Résultat",
-                physical: "Rythme Physique",
-                emotional: "Rythme Émotionnel",
-                intellectual: "Rythme Intellectuel",
+                resultFor: "Résultat pour {name}",
+                physical: "Physique",
+                emotional: "Émotionnel",
+                intellectual: "Intellectuel",
+                rising: "↑ croissant",
+                falling: "↓ décroissant",
                 daysPassed: "Un total de {days} jours se sont écoulés.",
                 dayOfCycle: "Jour {day} sur {cycle}",
                 chartLabels: {
@@ -113,16 +363,20 @@
             },
             es: {
                 title: "Calculadora de Biorritmo",
+                name: "Nombre:",
                 birthdate: "Fecha de nacimiento:",
                 eventdate: "Fecha del evento:",
-                physicalCycle: "Ciclo Físico (Días, Predeterminado 23):",
-                emotionalCycle: "Ciclo Emocional (Días, Predeterminado 28):",
-                intellectualCycle: "Ciclo Intelectual (Días, Predeterminado 33):",
+                physicalCycle: "Ciclo Físico (Predeterminado 23):",
+                emotionalCycle: "Ciclo Emocional (Predeterminado 28):",
+                intellectualCycle: "Ciclo Intelectual (Predeterminado 33):",
                 button: "Calcular",
                 resultTitle: "Resultado",
-                physical: "Ritmo Físico",
-                emotional: "Ritmo Emocional",
-                intellectual: "Ritmo Intelectual",
+                resultFor: "Resultado para {name}",
+                physical: "Físico",
+                emotional: "Emocional",
+                intellectual: "Intelectual",
+                rising: "↑ subiendo",
+                falling: "↓ bajando",
                 daysPassed: "Han pasado un total de {days} días.",
                 dayOfCycle: "Día {day} de {cycle}",
                 chartLabels: {
@@ -136,16 +390,20 @@
             },
             ru: {
                 title: "Калькулятор Биоритмов",
+                name: "Имя:",
                 birthdate: "Дата рождения:",
                 eventdate: "Дата события:",
-                physicalCycle: "Физический цикл (Дни, По умолчанию 23):",
-                emotionalCycle: "Эмоциональный цикл (Дни, По умолчанию 28):",
-                intellectualCycle: "Интеллектуальный цикл (Дни, По умолчанию 33):",
+                physicalCycle: "Физический цикл (По умолчанию 23):",
+                emotionalCycle: "Эмоциональный цикл (По умолчанию 28):",
+                intellectualCycle: "Интеллектуальный цикл (По умолчанию 33):",
                 button: "Рассчитать",
                 resultTitle: "Результат",
-                physical: "Физический Ритм",
-                emotional: "Эмоциональный Ритм",
-                intellectual: "Интеллектуальный Ритм",
+                resultFor: "Результат для {name}",
+                physical: "Физический",
+                emotional: "Эмоциональный",
+                intellectual: "Интеллектуальный",
+                rising: "↑ растёт",
+                falling: "↓ падает",
                 daysPassed: "Прошло всего {days} дней.",
                 dayOfCycle: "День {day} из {cycle}",
                 chartLabels: {
@@ -159,16 +417,20 @@
             },
             zh: {
                 title: "生物节律计算器",
+                name: "姓名:",
                 birthdate: "出生日期:",
                 eventdate: "事件日期:",
-                physicalCycle: "身体周期 (天, 默认 23):",
-                emotionalCycle: "情绪周期 (天, 默认 28):",
-                intellectualCycle: "智力周期 (天, 默认 33):",
+                physicalCycle: "身体周期 (默认 23):",
+                emotionalCycle: "情绪周期 (默认 28):",
+                intellectualCycle: "智力周期 (默认 33):",
                 button: "计算",
                 resultTitle: "结果",
-                physical: "身体节律",
-                emotional: "情绪节律",
-                intellectual: "智力节律",
+                resultFor: "{name} 的结果",
+                physical: "身体",
+                emotional: "情绪",
+                intellectual: "智力",
+                rising: "↑ 上升",
+                falling: "↓ 下降",
                 daysPassed: "总共过去了 {days} 天。",
                 dayOfCycle: "第 {day} 天，共 {cycle} 天",
                 chartLabels: {
@@ -182,16 +444,20 @@
             },
             ja: {
                 title: "バイオリズム計算機",
+                name: "名前:",
                 birthdate: "生年月日:",
                 eventdate: "イベント日:",
-                physicalCycle: "身体リズム (日数, デフォルト 23):",
-                emotionalCycle: "感情リズム (日数, デフォルト 28):",
-                intellectualCycle: "知的リズム (日数, デフォルト 33):",
+                physicalCycle: "身体リズム (デフォルト 23):",
+                emotionalCycle: "感情リズム (デフォルト 28):",
+                intellectualCycle: "知的リズム (デフォルト 33):",
                 button: "計算する",
                 resultTitle: "結果",
-                physical: "身体リズム",
-                emotional: "感情リズム",
-                intellectual: "知的リズム",
+                resultFor: "{name} の結果",
+                physical: "身体",
+                emotional: "感情",
+                intellectual: "知的",
+                rising: "↑ 上昇",
+                falling: "↓ 下降",
                 daysPassed: "合計 {days} 日が経過しました。",
                 dayOfCycle: "{cycle} 日中の {day} 日目",
                 chartLabels: {
@@ -205,16 +471,20 @@
             },
             hi: {
                 title: "बायोरिदम कैलकुलेटर",
+                name: "नाम:",
                 birthdate: "जन्मतिथि:",
                 eventdate: "घटना की तिथि:",
-                physicalCycle: "शारीरिक चक्र (दिन, डिफ़ॉल्ट 23):",
-                emotionalCycle: "भावनात्मक चक्र (दिन, डिफ़ॉल्ट 28):",
-                intellectualCycle: "बौद्धिक चक्र (दिन, डिफ़ॉल्ट 33):",
+                physicalCycle: "शारीरिक चक्र (डिफ़ॉल्ट 23):",
+                emotionalCycle: "भावनात्मक चक्र (डिफ़ॉल्ट 28):",
+                intellectualCycle: "बौद्धिक चक्र (डिफ़ॉल्ट 33):",
                 button: "गणना करें",
                 resultTitle: "परिणाम",
-                physical: "शारीरिक लय",
-                emotional: "भावनात्मक लय",
-                intellectual: "बौद्धिक लय",
+                resultFor: "{name} के लिए परिणाम",
+                physical: "शारीरिक",
+                emotional: "भावनात्मक",
+                intellectual: "बौद्धिक",
+                rising: "↑ बढ़ रहा",
+                falling: "↓ घट रहा",
                 daysPassed: "कुल {days} दिन बीत चुके हैं।",
                 dayOfCycle: "{cycle} में से दिन {day}",
                 chartLabels: {
@@ -228,16 +498,20 @@
             },
             it: {
                 title: "Calcolatore di Bioritmo",
+                name: "Nome:",
                 birthdate: "Data di nascita:",
                 eventdate: "Data dell'evento:",
-                physicalCycle: "Ciclo Fisico (Giorni, Predefinito 23):",
-                emotionalCycle: "Ciclo Emozionale (Giorni, Predefinito 28):",
-                intellectualCycle: "Ciclo Intellettuale (Giorni, Predefinito 33):",
+                physicalCycle: "Ciclo Fisico (Predefinito 23):",
+                emotionalCycle: "Ciclo Emozionale (Predefinito 28):",
+                intellectualCycle: "Ciclo Intellettuale (Predefinito 33):",
                 button: "Calcola",
                 resultTitle: "Risultato",
-                physical: "Ritmo Fisico",
-                emotional: "Ritmo Emozionale",
-                intellectual: "Ritmo Intellettuale",
+                resultFor: "Risultato per {name}",
+                physical: "Fisico",
+                emotional: "Emozionale",
+                intellectual: "Intellettuale",
+                rising: "↑ crescente",
+                falling: "↓ calante",
                 daysPassed: "Sono passati in totale {days} giorni.",
                 dayOfCycle: "Giorno {day} di {cycle}",
                 chartLabels: {
@@ -251,16 +525,20 @@
             },
             nl: {
                 title: "Bioritme Calculator",
+                name: "Naam:",
                 birthdate: "Geboortedatum:",
                 eventdate: "Gebeurtenisdatum:",
-                physicalCycle: "Fysieke Cyclus (Dagen, Standaard 23):",
-                emotionalCycle: "Emotionele Cyclus (Dagen, Standaard 28):",
-                intellectualCycle: "Intellectuele Cyclus (Dagen, Standaard 33):",
+                physicalCycle: "Fysieke Cyclus (Standaard 23):",
+                emotionalCycle: "Emotionele Cyclus (Standaard 28):",
+                intellectualCycle: "Intellectuele Cyclus (Standaard 33):",
                 button: "Berekenen",
                 resultTitle: "Resultaat",
-                physical: "Fysieke Ritme",
-                emotional: "Emotionele Ritme",
-                intellectual: "Intellectuele Ritme",
+                resultFor: "Resultaat voor {name}",
+                physical: "Fysiek",
+                emotional: "Emotioneel",
+                intellectual: "Intellectueel",
+                rising: "↑ stijgend",
+                falling: "↓ dalend",
                 daysPassed: "Er zijn in totaal {days} dagen verstreken.",
                 dayOfCycle: "Dag {day} van {cycle}",
                 chartLabels: {
@@ -274,7 +552,6 @@
             }
         };
 
-        /* Code */
         function getUrlParameter(name) {
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
@@ -283,24 +560,68 @@
         const urlLang = getUrlParameter('lang');
         const userLang = navigator.language.slice(0, 2);
         const lang = translations[urlLang] ? urlLang : (translations[userLang] ? userLang : 'en');
+        const t = translations[lang];
 
-        document.title = translations[lang].title;
-        document.querySelector('h1').textContent = translations[lang].title;
-        document.querySelector('label[for="birthdate"]').textContent = translations[lang].birthdate;
-        document.querySelector('label[for="eventdate"]').textContent = translations[lang].eventdate;
-        document.querySelector('label[for="physicalCycle"]').textContent = translations[lang].physicalCycle;
-        document.querySelector('label[for="emotionalCycle"]').textContent = translations[lang].emotionalCycle;
-        document.querySelector('label[for="intellectualCycle"]').textContent = translations[lang].intellectualCycle;
-        document.querySelector('button').textContent = translations[lang].button;
+        document.documentElement.lang = lang;
+        document.title = t.title;
+        document.getElementById('pageTitle').textContent = t.title;
+        document.getElementById('nameLabel').textContent = t.name;
+        document.getElementById('birthdateLabel').textContent = t.birthdate;
+        document.getElementById('eventdateLabel').textContent = t.eventdate;
+        document.getElementById('physicalCycleLabel').textContent = t.physicalCycle;
+        document.getElementById('emotionalCycleLabel').textContent = t.emotionalCycle;
+        document.getElementById('intellectualCycleLabel').textContent = t.intellectualCycle;
+        document.getElementById('calcButton').textContent = t.button;
+
+        const STORAGE_KEY = 'biorhythm-calc-v1';
+
+        function saveState() {
+            const state = {
+                name: document.getElementById('personName').value,
+                birthdate: document.getElementById('birthdate').value,
+                physicalCycle: document.getElementById('physicalCycle').value,
+                emotionalCycle: document.getElementById('emotionalCycle').value,
+                intellectualCycle: document.getElementById('intellectualCycle').value
+            };
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const s = JSON.parse(raw);
+                    if (s.name) document.getElementById('personName').value = s.name;
+                    if (s.birthdate) document.getElementById('birthdate').value = s.birthdate;
+                    if (s.physicalCycle) document.getElementById('physicalCycle').value = s.physicalCycle;
+                    if (s.emotionalCycle) document.getElementById('emotionalCycle').value = s.emotionalCycle;
+                    if (s.intellectualCycle) document.getElementById('intellectualCycle').value = s.intellectualCycle;
+                }
+            } catch (e) {}
+
+            const eventInput = document.getElementById('eventdate');
+            if (!eventInput.value) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                eventInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        }
+
+        loadState();
 
         let myChart;
         function calculateBiorythms() {
+            const personName = document.getElementById('personName').value.trim();
             const birthdate = new Date(document.getElementById('birthdate').value);
             const eventdate = new Date(document.getElementById('eventdate').value);
             if (isNaN(birthdate) || isNaN(eventdate)) {
-                alert(translations[lang].invalidDate);
+                alert(t.invalidDate);
                 return;
             }
+
+            saveState();
 
             const diffDays = Math.floor((eventdate - birthdate) / (1000 * 60 * 60 * 24));
 
@@ -308,17 +629,42 @@
             const emotionalCycle = parseInt(document.getElementById('emotionalCycle').value) || 28;
             const intellectualCycle = parseInt(document.getElementById('intellectualCycle').value) || 33;
 
-            const physical = diffDays % physicalCycle;
-            const emotional = diffDays % emotionalCycle;
-            const intellectual = diffDays % intellectualCycle;
+            function dayInCycle(days, cycle) {
+                const r = days % cycle;
+                return r < 0 ? r + cycle : r;
+            }
 
-            document.getElementById('result').innerHTML = `
-                <h2>${translations[lang].resultTitle}</h2>
-                <p class="physical"><strong>${translations[lang].physical}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', physical).replace('{cycle}', physicalCycle)}</p>
-                <p class="emotional"><strong>${translations[lang].emotional}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', emotional).replace('{cycle}', emotionalCycle)}</p>
-                <p class="intellectual"><strong>${translations[lang].intellectual}:</strong><br>${translations[lang].dayOfCycle.replace('{day}', intellectual).replace('{cycle}', intellectualCycle)}</p>
-                <p>${translations[lang].daysPassed.replace('{days}', diffDays)}</p>
-            `;
+            const cycles = [
+                { key: 'physical', cycle: physicalCycle, cls: 'physical' },
+                { key: 'emotional', cycle: emotionalCycle, cls: 'emotional' },
+                { key: 'intellectual', cycle: intellectualCycle, cls: 'intellectual' }
+            ];
+
+            const rhythmsEl = document.getElementById('rhythms');
+            rhythmsEl.innerHTML = '';
+            cycles.forEach(c => {
+                const value = Math.sin(2 * Math.PI * diffDays / c.cycle);
+                const percent = Math.round(value * 100);
+                const rising = Math.cos(2 * Math.PI * diffDays / c.cycle) > 0;
+                const dayIdx = dayInCycle(diffDays, c.cycle);
+                const sign = percent > 0 ? '+' : '';
+                const card = document.createElement('div');
+                card.className = `rhythm ${c.cls}`;
+                card.innerHTML = `
+                    <div class="rhythm-name">${t[c.key]}</div>
+                    <div class="value">${sign}${percent}%</div>
+                    <div class="trend">${rising ? t.rising : t.falling}</div>
+                    <div class="day-of-cycle">${t.dayOfCycle.replace('{day}', dayIdx).replace('{cycle}', c.cycle)}</div>
+                `;
+                rhythmsEl.appendChild(card);
+            });
+
+            document.getElementById('resultTitle').textContent = personName
+                ? t.resultFor.replace('{name}', personName)
+                : t.resultTitle;
+
+            document.getElementById('daysPassed').textContent =
+                t.daysPassed.replace('{days}', diffDays);
 
             const ctx = document.getElementById('biorythmChart').getContext('2d');
             const days = [...Array(31).keys()];
@@ -336,37 +682,57 @@
                     labels: days.map(d => d - 15),
                     datasets: [
                         {
-                            label: translations[lang].chartLabels.physical,
+                            label: t.chartLabels.physical,
                             data: physicalData,
-                            borderColor: 'green',
+                            borderColor: '#1f7a32',
+                            backgroundColor: 'rgba(31,122,50,0.1)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            tension: 0.3,
                             fill: false
                         },
                         {
-                            label: translations[lang].chartLabels.emotional,
+                            label: t.chartLabels.emotional,
                             data: emotionalData,
-                            borderColor: 'blue',
+                            borderColor: '#1455a0',
+                            backgroundColor: 'rgba(20,85,160,0.1)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            tension: 0.3,
                             fill: false
                         },
                         {
-                            label: translations[lang].chartLabels.intellectual,
+                            label: t.chartLabels.intellectual,
                             data: intellectualData,
-                            borderColor: 'red',
+                            borderColor: '#b0201f',
+                            backgroundColor: 'rgba(176,32,31,0.1)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            tension: 0.3,
                             fill: false
                         }
                     ]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
+                        legend: {
+                            labels: {
+                                font: { size: 14 },
+                                padding: 16
+                            }
+                        },
                         annotation: {
                             annotations: {
                                 line1: {
                                     type: 'line',
                                     xMin: 15,
                                     xMax: 15,
-                                    borderColor: 'black',
+                                    borderColor: '#1a1a1a',
                                     borderWidth: 2,
                                     label: {
-                                        content: translations[lang].chartLabels.eventdate,
+                                        content: t.chartLabels.eventdate,
                                         enabled: true,
                                         position: 'start'
                                     }
@@ -377,36 +743,24 @@
                     scales: {
                         y: {
                             min: -1,
-                            max: 1
+                            max: 1,
+                            ticks: { font: { size: 13 } }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: translations[lang].chartLabels.xAxis,
-                                font: {
-                                    weight: '900'
-                                }
-                            }
+                                text: t.chartLabels.xAxis,
+                                font: { weight: '700', size: 14 }
+                            },
+                            ticks: { font: { size: 13 } }
                         }
                     }
                 }
             });
-            document.getElementById('biorythmChart').style.display = 'block';
-            document.getElementById('break').style.display = 'none';
-        }
 
+            document.getElementById('resultCard').classList.remove('hidden');
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     </script>
-<p>Languages:
-    <a href="?lang=de">DE</a>,
-    <a href="?lang=en">EN</a>,
-    <a href="?lang=es">ES</a>,
-    <a href="?lang=fr">FR</a>,
-    <a href="?lang=hi">HI</a>,
-    <a href="?lang=it">IT</a>,
-    <a href="?lang=ja">JA</a>,
-    <a href="?lang=nl">NL</a>,
-    <a href="?lang=ru">RU</a>,
-    <a href="?lang=zh">ZH</a>
-</p>
 </body>
 </html>
